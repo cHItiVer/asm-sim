@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+        <link rel="shortcut icon" href="/favicon.png">
+        <title>Assembly Tutorial</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="columns">
+                <div class="column col-8 col-mx-auto">
+                    <h1>Introduction</h1>
+                    This tutorial is meant to teach an assembly language for a very simple computer. It assumes no prior knowledge of assembly programming or how computers work at such a deep level, but some basic knowledge of programming concepts like logical operations, control statements, and functions would certainly be useful.
+                    <h1>How do computers work?</h1>
+                    All computers require a CPU and memory. The CPU allows the computer to run code, and memory provides space for that code and other data to be stored. Every piece of data in memory has an <b>address</b>, which is a number showing its location, much like how a home address shows your location on your street. They are usually written in hexadecimal. When you run a program on your computer, your operating system loads code from the program's file and places it in memory for the CPU to run. This code is not text, but a very long string of binary data called <b>machine code</b>. Machine code is the only "programming language," if it can even be called that, that a computer can truly understand. All other programming languages eventually get turned from their human-readable text representation into computer-readable machine code through a process called <b>compilation</b>. Assembly language is the human-readable text form of machine code, with each line of code being a 1-to-1 mapping to a machine code <b>instruction</b>. Machine code instructions are essentially commands for the CPU to run and they are the smallest possible unit of "code" that a CPU recognizes. They are extremely basic and each instruction typically does very little on its own, but using a lot of these simple instructions together allows a programmer to combine their effects and produce extremely complex results. A typical modern CPU can run between 3 to 5 billion instructions per second. When a program runs, the instructions are executed sequentially one at a time. The CPU keeps track of the location of the current instruction in memory through the use of the <b>program counter (PC)</b>, which is a type of <b>register</b>. A register is essentially a variable stored inside the CPU that can be read and modified by machine code instructions. Modern CPUs usually have somewhere between 16 and 64 registers; this computer's CPU has 5 including the program counter. In the simulator, the program counter's current value can be seen in the Registers section. In the Memory section, the cell highlighted in blue shows the location of the currently executing instruction, which is what the program counter points to.
+                    <h1>Instructions</h1>
+                    Instructions consist of 2 parts: an <b>opcode</b> and <b>operand</b>. The opcode is the actual command of the instruction: add 2 numbers together, subtract 2 numbers, run code from this memory location, store data at this memory location, etc. Each opcode is represented by a different hexadecimal number in memory, which is how the CPU distinguishes between them. Each opcode also has a <b>mnemonic</b>, which is the human-readable name for it. They are typically abbreviated to no more than 3 or 4 letters, so an instruction with a name like "jump if not zero" will have the mnemonic "jnz." The set of all a CPU's different instructions are called its <b>instruction set</b>. CPUs can have different statistics like cores or clock speed, but if they have the same instruction set, they will all be able to run common machine code instructions. The most common instruction sets nowadays are Intel's x86_64 (also used by AMD, which they call AMD64) on desktops and laptops and ARM on mobile devices. Trying to run a program compiled on a desktop computer on your phone will thus not work because their CPUs have different instruction sets, meaning their machine code instructions are incompatible. The number of instructions the x86_64 instruction set has is around 3,000, but this computer's instructions number at a much more manageable 25. However, many instructions have multiple variants, which brings the actual total number of instructions up to 52. Why these variants exist will be discussed soon.
+                    <br><br>
+                    From here on out, this tutorial will be going through each assembly instruction and explaining it in depth. Anything else that needs to be covered for full assembly fluency (which is actually quite a bit) will be integrated into each instruction's description as necessary.
+                    <h1>ld, hlt</h1>
+                    ld is the mnemonic of the "load" instruction. It takes the data from the operand and loads it into the <b>accumulator (A)</b> register. The accumulator is this computer's only truly <b>general purpose</b> register, which means that you can directly perform mathematical operations like addition and subtraction or logical operations on it. Thus, this instruction is necessary to do literally anything at all. Let's see an example of it in some code:
+                    <pre class="code"><code>ld #2</code></pre>
+                    Try this out for yourself in the simulator. Copy/paste this code into the Program section and then press the Assemble button, Then, use the Step button to run the instruction. You'll see that in the Registers section, the value of A is 02. The operand of the ld instruction is #2, the hashtag showing that its addressing mode is immediate. To demonstrate what an addressing mode is, try getting rid of the hashtag and re-assembling the program. You will notice that 2 things in the Memory section have changed: the instruction's opcode has changed from 04 to 05. Secondly, the cell highlighted in gray is now memory location 02 rather than 01 like it was before. Stepping through the instruction, you will also see that the contents of A stay as 00. What happened?<br><br>
+Before we continue, a quick explanation: any numbers with leading zeroes are in hexadecimal. Normally hexadecimal numbers are prefixed with 0x, but assembly programmers generally use hexadecimal for all their numbers and force them to be the same length, explaining the leading zeroes. The assembler will accept both decimal (by default), hexadecimal (if prefixed with 0x), binary (prefixed with 0b), and also octal numbers (base 8, prefixed with 0o; this is very rarely used).<br><br>
+Earlier, I mentioned that each instruction may have multiple variants, and this is where that comes into play. Most instructions in this computer's instruction set have multiple <b>addressing modes</b>, which change how the instruction accesses the data to use as its operand. Despite these instructions having the same mnemonic (ld), they have different opcodes (04 vs 05) so that the CPU can know which addressing mode to use. In ld #2, the hashtag signifies that this instruction's addressing mode is <b>immediate</b>, meaning that it loads the number immediately after the instruction into A. Assembling this code again, you can see the instruction's opcode, 04, followed immediately after by the number which will be loaded into the accumulator by this instruction: 02. Contrast this with ld 2, which has no hashtag and thus uses the <b>direct</b> addressing mode. The direct addressing mode, rather than loading the number 2, loads the value at memory address 2. You can see that the highlighted gray cell in the Memory section is at memory location 02 as expected. Change the number in the operand to 3 and memory location 03 will be highlighted, and its value will be loaded into the accumulator. Trying this, though, we see that all memory locations other than 00 and 01 are empty and are thus 0. If we load the contents of an empty memory location into an already empty accumulator, nothing will change. Loading from memory location 0, though, will load 5 into the accumulator since it isn't empty.<br><br>
+There is, thankfully, only 1 addressing mode we are yet to cover, and that is the <b>indirect</b> mode. Modern CPUs vary in how many addressing modes they have, with some having very many, like x86_64, and some having very few, like ARM, but even ARM's 10 is still a lot compared to this CPU's 3 (technically 4 since a few instructions don't have operands). The indirect addressing mode loads from a specified memory address, like the direct mode, but then goes 1 step further and uses the value at the specified memory address as another memory address, which it then gets the data from. Confused? Try this code:
+                    <pre class="code"><code>ld [3]
+hlt
+#d8 4
+#d8 5</code></pre>
+                    This code also introduces something new in addition to the indirect mode: data declarations. Using #d8, you can follow it with a number to store a number in memory. This can also be used to store strings of text in memory (but with #d instead of #d8), with each character being represented by its ASCII value. Getting back to the code, we can see that it starts by indirectly loading from memory address 3. The value of memory address 3 is 4. If this were direct addressing, 4 would be loaded into the accumulator and it would be done. Indirect addressing goes 1 level deeper though, and uses 4 as a memory address. At memory address 4 is 5, which you can see is what gets loaded into the accumulator if you step through the instruction. Memory location 5 is also highlighted in gray, showing that it is what is being accessed by the instruction. After the ld instruction is the hlt instruction, which stops the program's execution. If you remove this instruction and step through the first ld instruction, you'll see under the Memory section that the current instruction is ld #0x05. By sheer coincidence, 4 happens to be the opcode of ld with immediate addressing and 5 is its operand, which ends up loading the same thing into the accumulator as if it were indirect. This is despite the fact that what was assembled at this location was a data declaration, not an instruction. This is because computers fundamentally cannot distinguish between code and data in memory. If the program counter points to data, then the CPU will interpret this data as an opcode and operand and try to run it as an instruction. After all, if the program counter is pointing to it, surely it must be code? This is something you must keep in mind as you write code. You have to structure your code and data well, or else your code may have some unintended side effects. Programs interpreting data as code is a real problem, as it can allow the user to run unwanted malicious code. This is known as <b>arbitrary code execution</b>. There is an example program that will let you try it out.<br><br>
+                    To recap the addressing modes, immediate uses the value immediately after the opcode as its operand. Direct uses the value immediately after as a memory address, and the value at that memory address is the operand. Indirect goes a level deeper and uses the value at that memory address as another memory address, with the value there being used as the operand. Here's a hopefully helpful diagram:
+                    <img src="/modes.png" class="img-responsive">
+                    <h1>st</h1>
+                    st is store, the opposite of ld. Where ld loads a value from memory into the accumulator, st loads a value from the accumulator into memory.
+                    <pre class="code"><code>ld #3
+st 7
+hlt</code></pre>
+                    Running this code, you will see that 3 gets stored at memory address 7. Addressing modes for st work a little differently than with ld, the major difference being that st has no immediate mode. The default mode for st is direct, which straightforwardly allows you to store the accumulator's value at the memory address provided by the operand immediately after the instruction.
+                    <pre class="code"><code>ld #3
+st [x]
+hlt
+
+x:
+#d8 8</code></pre>
+                    This introduces something new: <b>labels</b>. Labels may look like variables, but they are not the same! Unlike variables, labels don't store any data of their own and are actually just memory addresses. Labels allow you to use names for your memory addresses instead of numbers and more easily keep track of where data is stored. When you assemble code with labels in it, the memory locations the labels refer to will be shown underneath the Memory section. Looking at what this indirect store does, the operand is x. The label x is declared on the 4th line, and it points to a data declaration of the number 8 at memory address 5. If this were a direct store, 3 would be stored at memory address x (5), but since this is indirect, it goes one level further. The value at memory address x is 8, meaning that 3 will get stored at memory address 8.<br><br>Aside from this, st is a very straightforward instruction. Let's move on to the next instruction.
+                    <h1>add, adc</h1>
+                    add, as you can probably guess, adds 2 numbers together. Specifically, it adds the operand and the accumulator together and stores the result in the accumulator. This is how all mathematical operations work on this computer: they are between the operand and the accumulator, and the result is stored in the accumulator. There is no way, in 1 instruction, to add 2 memory values together, or to add a memory value to the accumulator and then store it back in memory. Those all require multiple instructions.
+                    <pre class="code"><code>ld #3
+add #5
+hlt</code></pre>
+                    After running this, you can see that the accumulator has the expected value of 8.
+                    <pre class="code"><code>ld #3
+add x
+hlt
+
+x:
+#d8 4</code></pre>
+                    This makes sense as well. 3 is loaded into the accumulator, and then the value at memory address x, which is 4, gets added to it, yielding 7.
+                    <pre class="code"><code>ld #255
+add #2
+hlt</code></pre>  
+                    This has quite an interesting result, though. 255 + 2 = 257, but the accumulator has 1 in it. As well, the "C" register next to it is now 1. This is because memory addresses and registers on this computer are 8-bit, meaning they can only hold numbers that have 8 or less binary digits or take up 1 byte of memory. This is what is meant when you hear about computers or gaming consoles that are "8-bit," "16-bit," "64-bit," etc. In practice, this means only numbers between 0 and 255 are able to be used. No negative numbers or fractions are possible. 255's binary representation is 0b11111111, so it is the largest possible 8-bit binary number. Trying to add any more to it will yield something that cannot be held in the accumulator, so it overflows. When a mathematical operation has a result that is more than 255, the <b>carry flag (C)</b> gets set to 1. This lets you know that an overflow has occurred. Note, though, that mathematical overflows do not cause an error, and are actually necessary to perform math with numbers larger than 255. Much like how we carry a 1 when an addition is more than 10 in decimal addition, this computer carries a 1 when an addition is more than 255. This allows us to correctly perform addition on numbers that can be any size (memory permitting). 
+                    <pre class="code"><code>ld x_low
+add y_low
+st result_low
+ld x_high
+adc y_high
+st result_high
+hlt
+
+x_high:
+#d8 0x04
+
+x_low:
+#d8 0xa1
+
+y_high:
+#d8 0x15
+
+y_low:
+#d8 0x94
+
+result_high:
+#d8 0
+
+result_low:
+#d8 0</code></pre>
+                    This adds the numbers 1,185 (0x04a1, stored in x_high and x_low) and 5,524 (0x1594, stored in y_high and y_low), yielding the result of 6,709 (0x1a35, stored in result_high and result_low). First, the lower parts of the numbers are added together, just like how we start by adding the smallest digits first in base 10 addition. Then, a new instruction is used: adc. adc works just like add, but it adds the current value of the carry flag to the addition. If it is 0, nothing happens and it is just a normal addition. If it is 1, 1 gets added to the result. adc stands for add with carry, and this is what allows us to add large numbers that take up multiple bytes in memory. The lower parts overflow since 0xa1 + 0x94 = 0x135 > 255, so C is set to 1 and the upper part of the result that cannot fit in 8 bits is cut off, yielding the true result of 0x35. Then, when adding the higher parts with the carry, 0x04 + 0x15 + 1 = 0x1a, yielding a final result in result_high and result_low of 0x1a35, which correctly evaluates to 6,709.
+                    <h1>sub, sbc</h1>
+                    sub subtracts 2 numbers. It works roughly the same way as add, taking the operand, subtracting it from the accumulator, and placing the result in the accumulator.<br><br>
+                    Earlier we talked about mathematical overflow, but underflow also exists. When a subtraction is less than 0, it yields a negative number, which cannot be represented easily in binary. Negative numbers in binary change depending on how many bits they take up. For an x-bit positive number y, -y is represented the same way as 2<sup>x</sup> - y. For example, -1 as an 8-bit number would be represented as 2<sup>8</sup> - 1 = 255 = 0xff. You can confirm this yourself with this code:
+                    <pre class="code"><code>ld #1
+sub #2
+hlt</code></pre>
+                    As with overflows, underflows cause the C flag to be set to 1. In addition to adding and subtracting multi-byte numbers, the C flag will also come in handy when doing comparisons between 2 numbers later.
+                    <br><br>
+                    Like adc, sbc (subtract with carry) allows you to do carries and thus subtraction with multi-byte numbers. It subtracts the value of the carry flag from the current subtraction. If it is 0, nothing changes, if it is 1, 1 is subtracted.
+                    <h1>and, or, xor</h1>
+                    and, or, and xor are <b>bitwise operations</b>, which are a type of logical operation. They perform a specified logical operation on each bit of the 2 inputs, the operand and accumulator. For a refresher, here is a table of the results of some logical operations:
+                    <img src="https://3.bp.blogspot.com/-y7DfmfoPw0M/VHX7yy12N5I/AAAAAAAAAcI/pQz5AX0s1-8/s1600/Truth%2BTables.JPG" class="img-responsive">
+                    nand, nor, and not are not available in this instruction set, but they can be simulated through a series of other bitwise instructions. not flips each bit of the input (0 turns to 1 and 1 turns to 0), and this can be done by xor-ing the accumulator with 255:
+                    <pre class="code"><code>; <b>Comments</b> begin with semicolons, and they tell the assembler to ignore whatever comes after it on that line. It allows you to write notes which explain what a line of code does or what its purpose is.
+ld #47 ; 0b00101111
+xor #255 ; 0b11111111
+hlt ; 0b11010000 = 0xd0 = 208</code></pre>
+                    In general, xor flips each bit of the accumulator if its respective bit in the operand is 1 and preserves it if it is 0. Thus, 255, where all bits are 1, flips all bits in the accumulator. xor-ing with 0 would just keep the number the same. As for how to simulate the other operations, nand is just and followed by not, so you can just and the accumulator with your operand and then xor it with 255, and nor is the same thing but with or instead of and.
+                    <br><br>
+                    These kinds of operations are useful if you want to manipulate specific bits of a number. For example, and allows you to preserve specific bits of a number while clearing others.
+                    <pre class="code"><code>ld #46 ; 0b00101110
+and #7 ; 0b00000111
+hlt ; 0b00000110 = 6</code></pre>
+                    For every bit in the accumulator, it is preserved in the result if its respective bit in the operand is 1, no matter if that bit is 0 or 1. If its respective bit is 0, it is always set to 0. This allows you to extract specific bits from a number and manipulate them alone. If you want to clear a specific bit in the accumulator and set it to 0, you can and it with the not of the specific bit you want to clear (this doesn't require doing xor 255 on the operand, it's easier to just do it manually; if you want to clear the 4th bit of a number, the operand would be not 0b00010000 = 0b11101111).
+                    <pre class="code"><code>ld #46 ; 0b00101110
+or #193 ; 0b11000001
+hlt ; 0b11101111 = 0xef = 239</code></pre>
+                    or sets a bit in the accumulator to 1 if its respective bit in the operand is 1 but preserves it if it is 0. This can be used to set certain bits of a number.
+                    <h1>shl, shr</h1>
+                    These are shift instructions. They shift the accumulator left and right by 1 bit respectively. 
+                    <img src="/shift.png" class="img-responsive">
+                    During a left shift, every bit is replaced with the bit to the right of it. The lowest bit is replaced with 0, and the highest bit gets shifted into the carry flag. This is necessary for multi-byte shifts. In a right shift, every bit is replaced with the bit to the left of it. The lowest bit gets shifted into the carry flag and the highest bit gets replaced with 0. As you may notice, shifting left multiplies the accumulator by 2 and shifting right divides it by 2 and rounds down to the nearest whole number. Shifting multiple times in a row allows you to multiply or divide by powers of 2 (by 4 if you do it 2 times, 8 if 3 times, 16 if 4 times, etc). This is important since no singular multiply or divide instructions exist in this instruction set (like many other early 8-bit computers that this one was modeled on; the reason for this being that multiplication and division take a very long time to do in hardware, and the circuitry required to do it took up a lot of space). Shift instructions take no operands:
+                    <pre class="code"><code>ld #95 ; 0b01011111
+shl ; no operand
+hlt ; 0b10111110 = 190 = 95 * 2</code></pre>
+                    This is the 4th addressing mode that was mentioned earlier, called <b>implied</b> addressing. The operand is implied to be the accumulator and no other inputs are required, so no operand is necessary. 
+                    <h1>rol, ror</h1>
+                    Rotate left and right. These instructions are to shl and shr what adc and sbc are to add and sub. Instead of 0 being shifted into the accumulator, the current C value is shifted in. The bit being shifted out is still shifted into the C flag, which allows you to do multi-byte shifts with a carry.
+                    <img src="/rotate.png" class="img-responsive">
+                    The shifting in of the C flag allows multi-byte shifting, and thus multi-byte multiplication and division. Like with adc and sbc, these need not be only 2 byte (16 bits) numbers, but even 3, 4, 5, etc. byte numbers.
+                    <pre class="code"><code>ld big_number_highest
+shr
+st result_highest
+ld big_number_2nd_highest
+ror
+st result_2nd_highest
+ld big_number_3rd_highest
+ror
+st result_3rd_highest
+ld big_number_lowest
+ror
+st result_lowest
+hlt
+
+big_number_highest:
+#d8 0xB3
+
+big_number_2nd_highest:
+#d8 0xAA
+
+big_number_3rd_highest:
+#d8 0xDF
+
+big_number_lowest:
+#d8 0x18
+
+result_highest:
+#d8 0
+
+result_2nd_highest:
+#d8 0
+
+result_3rd_highest:
+#d8 0
+
+result_lowest:
+#d8 0</code></pre>
+                    The 4-byte number stored in big_number is 3,014,319,896, and this program divides it by 2 and places the correct result of 1,507,159,948 (0x59D56F8C) in result.
+                    <h1>cmp</h1>
+                    Compares the accumulator with the operand and sets flags as appropriate. The other flag this CPU has aside from the carry flag is the <b>zero flag (Z)</b>, which is set to 1 if the result of a mathematical operation is 0 and set to 0 if it is not 0. cmp acts the exact same as sub, but it discards the result instead of storing it in the accumulator. It does still set the correct flags though, and this is what allows us to do comparisons between 2 numbers.
+                    <pre class="code"><code>ld #5
+cmp #3
+hlt</code></pre>
+                    This compares 5 with 3 by subtracting 3 from 5. The accumulator stays as 5 even after the cmp instruction, which allows you to do more comparisons without having to add the number you're comparing it with back every time. As you can guess, 5 - 3 does not set any flags since it is not less than 0 and also is not 0. When the accumulator is more than the operand, both flags are 0.
+                    <pre class="code"><code>ld #3
+cmp #55
+hlt</code></pre>
+                    This compares 3 with 55. 3 - 55 is less than 0, so the carry flag is set. It is not 0, so the zero flag stays as 0. When the accumulator is less than the operand, C will be 1 and Z will be 0.
+                    <pre class="code"><code>ld #3
+cmp #3
+hlt</code></pre>
+                    This compares 3 and 3. 3 - 3 = 0 and 0 is not less than 0, so the carry flag is not set. It is 0, so the zero flag is set. When the accumulator is equal to the operand, C will be 0 and Z will be 1. There is no situation in which both C and Z should be 1 (how can something be both less than and equal to 0?). If that somehow happens, that means I coded something in the simulator wrong.
+                    <table class="table">
+                        <thead>
+                            <th>Accumulator in comparison to operand</th>
+                            <th>Carry flag</th>
+                            <th>Zero flag</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>More than</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Less than</td>
+                                <td>1</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Equal to</td>
+                                <td>0</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h1>tst</h1>
+                    Test is another instruction that can compare 2 numbers like cmp, but it uses a bitwise and to compare them rather than subtraction. This acts as an easy way to see if specific bits in the accumulator are set without actually modifying the accumulator.
+                    <pre class="code"><code>ld #3 ; 0b11
+tst #1 ; 0b01 = is bottom bit set?
+hlt ; 0b11 & 0b01 = 0b01 = result is non-zero, bottom bit is set</code></pre>
+                    Whether or not the bits are set is determined by the Z flag. If the bit is set, the and result will be non-zero and the Z flag won't be set. If it isn't set, the and result will be zero and the Z flag will be set. This instruction doesn't affect the C flag.
+<pre class="code"><code>ld #2 ; 0b10
+tst #1 ; 0b01 = is bottom bit set?
+hlt ; 0b10 & 0b01 = 0b00 = result is zero, bottom bit is not set</code></pre>
+                    <h1>jmp</h1>
+                    The jump instruction allows you to change the value of the PC and thus "jump" around in the code.
+                    <pre class="code"><code>jmp code
+
+data: ; data that we don't want to be interpreted as code
+#d8 4
+#d8 3
+#d8 "Hello, world!"
+
+code:
+ld #1
+add #1
+hlt</code></pre>
+                    Jumping over the data prevents it from being interpreted as code, which could have nasty side effects.
+                    <h1>jz, jnz, jc, jnc</h1>
+                    A computer is considered <b>Turing complete</b> if it can do any calculation given enough time and memory. Whether or not a computer is Turing complete depends on its instruction set, and in particular, 2 kinds of instructions are needed for Turing completeness: data manipulation instructions (which this computer has in ld, st, add, sub, and, or, xor, etc.) and conditional instructions, which as you may be able to figure out are instructions that only execute when certain conditions are true. From a more abstract point of view, it needs the ability to do an if-statement. If a condition is true, do this, otherwise do that. This computer's only conditional instructions are based on jumping, and its only possible conditions are based on the flags. Respectively, they are jump if Z is 1 (jz, "jump if zero"), jump if Z is 0 (jnz, "jump if not zero"), jump if C is 1 (jc, "jump if carry"), and jump if C is 0 (jnc, "jump if not carry"). This is why the flags are set by cmp and tst, as this allows us to do jumps based on the results of comparisons.
+                    <pre class="code"><code>ld #4
+cmp #8
+; if 4 - 8 < 0: 
+jc four_is_less_than_8 ; label names cannot start with numbers
+; elif 4 - 8 == 0:
+jz four_is_equal_to_8
+; else:
+jmp four_is_more_than_8
+
+four_is_less_than_8:
+ld #"4"
+out
+ld #"<"
+out
+ld #"8"
+out
+ld #"\n" ; newline, which is the enter key
+out
+hlt
+
+four_is_equal_to_8:
+ld #"4"
+out
+ld #"="
+out
+ld #"8"
+out
+ld #"\n"
+out
+hlt
+
+four_is_more_than_8:
+ld #"4"
+out
+ld #">"
+out
+ld #"8"
+out
+ld #"\n"
+out
+hlt</code></pre>
+                    This program prints a message to the Output section based on the comparison between 4 and 8. The structure of an if statement is included to give you an idea of how this fits in with more abstract programming concepts that you should be familiar with.<br><br>
+                    jc can be thought of as "jump if less than 0" and jz as "jump if equal to 0," but "jump if more than 0" is a bit harder since it is reliant on both C and Z being 0, where as whether or not something is less than 0 depends solely on the value of C and whether or not it is equal to 0 depends solely on Z. Thus, to do "jump if more than," you can put jc and jz before an unconditional jump so that all the numbers that are less than 0 or equal to 0 get diverted to a different path, leaving only the positive non-zero numbers.
+                    <h1>call, ret</h1>
+                    call is by far this computer's most complex instruction, and we have to explain both a new register and an entire section of the simulator in order to understand it fully.<br><br>
+                    call is essentially the equivalent of running a function in a more abstract sense. A function in a language like Python or JavaScript allows you to run a certain piece of code multiple times from any other location in the code, and then when it's done, it returns right back to where it was previously and continues running code there. Functions work a similar way in this assembly language: you can use the call instruction to jump to a function, run it, and then it will return right back to where you left off. But how does the computer keep track of where you call the function from? It needs to be able to know where to return to after it is done.
+                    <br><br>
+                    Enter the <b>call stack</b> and <b>stack pointer (SP)</b>. The call stack is a short list, 16 bytes long, of addresses. Whenever the call instruction is used, the address of the next instruction (PC + 2) is stored at the location in the call stack pointed to by SP and then SP is incremented by 1. When running a program with a function in it, such as the FizzBuzz example program, you can see a blue highlighted cell. This is the location of the stack pointer, which is directly after the most recent addition to the stack. When there are no addresses on the stack, it points to the 1st (empty) cell. After calling the function, its code runs, and at the end of the function, the ret ("return") instruction is used. ret decreases SP by 1 and loads the value at the location SP now points to back into the PC. As you'll remember, that value is the address that you called the function from. Due to this, it can return exactly to where it was called from and continue running code.
+                    <pre class="code"><code>ld #5
+call add_1
+add #2
+hlt
+
+add_1:
+add #1
+ret</code></pre>
+                    The function add_1 adds 1 to the accumulator (go figure). In this program, we first load 5 into A, and then call this function from address 2. PC + 2 = 4, which is placed in address 0 of the call stack, and SP is incremented. 1 is added to A, giving 6. Then, ret is used to return to where it was called from. SP is decremented, and the value of address 0 of the stack is placed into the PC, which is now 4. 4 is the address of add #2, the instruction directly after call add_1. 2 is then added to the result of add_1, 6, to give the final result of 8.
+                    <br><br>
+                    Functions, like in other programming languages, can call other functions.
+                    <pre class="code"><code>ld #5
+call add_7
+hlt
+
+add_7:
+call add_3
+call add_4
+ret
+
+add_3:
+add #3
+ret
+
+add_4:
+add #4
+ret</code></pre>
+                    This program has a function called add_7, which itself calls add_3 and add_4. Stepping through this 1 instruction at a time, we can see that 4 is put in address 0 of the stack upon calling add_7, as that is the address of the hlt instruction directly after it. The first thing add_7 does is call add_3, which places the address of the next instruction, 7, into address 1 of the stack and adds 1 to SP. We are now 2 levels deep into the stack. add_3 adds 3 and then returns, decrementing SP and placing 7 into the PC. At memory address 7, we call add_4, which places 9 in address 1 of the stack and increments SP. add_4 adds 4 and returns, decrementing SP and placing 9 in the PC. At address 9, we return to the add_7 function, and it returns. SP is decremented, and the address from which we originally called add_7, 4, is placed into the PC. It continues from there, halting immediately after. It even yields the correct result of 5 + 7, 0xC = 12.
+                    <br><br>
+                    The stack only has 16 bytes which it can store return addresses in. What happens if we exceed that limit? What if a function calls a function calls a function calls a function... 17 times? Thankfully, I don't need to write 17 separate functions to do this. Instead, how about this:
+                    <pre class="code"><code>call 0</code></pre>
+                    Stepping through this, we can see it first calls the unlabeled function at memory address 0. It places PC + 2 = 2 into the first location in the stack, increments SP, and jumps to address 0. At memory address 0, it calls the unlabeled function at memory address 0. It places PC + 2 = 2 into the first location in the stack, increments SP, and jumps to address 0. See where this is going? If you step through it enough times, the program will halt with the following message in Output: "Stack overflow. Halted at 0x00." A stack underflow is also possible since ret subtracts 1 from SP. If you simply run ret and nothing else, it will immediately halt and output "Stack underflow. Halted at 0x00."
+                    <pre class="code"><code>ld #6
+call add_9
+hlt
+
+add_9:
+add #1
+st number
+ld times_left
+sub #1
+st times_left
+ld number
+jnz call_add_9
+ret
+
+call_add_9:
+call add_9 ; calls are not conditional, so if you want to conditionally call a function, you have to conditionally jump to a label where you call the function
+ret
+
+times_left:
+#d8 9
+
+number:
+#d8 0</code></pre>
+                    This is certainly not the most efficient function that adds 9 to a number, but it shows the concept of <b>recursion</b>. A recursive function is a function that calls itself. It doesn't loop forever because it keeps track of the amount of times it has to add 1 repeatedly, and once that hits 0, the function knows it has added 9. A much more famous (but probably equally useless) recursive function is the <b>Ackermann function</b>, which is very hard to program on this computer because the call stack is only for saving addresses, not data, and this function requires saving its parameters on a stack. As seen in its example program though, it's definitely not impossible to program, but it does require creating a custom "stack" in memory. It's also notorious for growing very quickly, which makes programming it even harder. A(4, 1) is 65,533, and A(4, 2) is equal to 2<sup>65,536</sup> - 3, which is 19,729 digits long and obviously doesn't fit in 8 bits.
+                    <img src="https://i.stack.imgur.com/g6Bn4.png" class="img-responsive">
+                    In other languages, you can pass <b>arguments</b> to functions. For example, we could run add_9(5) in Python and it would yield 16, or add_9(1) and it would yield 10. These arguments provide a different result for the function each time, but so far we have only seen functions that do the same thing every time. How can we pass arguments to functions in assembly?
+                    <pre class="code"><code>ld #string
+st print.address
+call print
+ld #string2
+st print.address
+call print
+hlt
+
+print:
+ld [.address]
+cmp #"\n"
+out
+jz .end
+ld .address
+add #1
+st .address
+jmp print
+
+.end:
+ret
+
+.address:
+#d8 0
+
+string:
+#d "Hello, world!\n" ; string, so #d instead of #d8
+
+string2:
+#d "Goodbye, world!\n"</code></pre>
+                    This is a slightly modified version of the Hello world example program. It provides a function, print, which takes an argument, address. You can see some labels begin with periods, which are local labels. These allow you to have label names that belong specifically to some other label, and let you use the same label name elsewhere. For example, you could have 2 functions, x and y, that both have a local label called z. These would be referenced outside those 2 functions as x.z and y.z respectively, allowing you to have 2 labels with the same name, just in different functions. At the beginning, we load string immediately. This is not loading the value at the memory address of string, but loading the memory address itself, 0x18. We then store it at address, which is a local label of the print function. This is how you can create arguments. Then, print is called and it uses the value provided at print.address as the address from which to indirectly load the string. Thus, we can call the function twice with 2 different string address as arguments: first with the address of "Hello, world!" and then again with the address of "Goodbye, world!" The function itself doesn't change in between calls, but its result does based on the argument we provide it.
+                    <h1>in, out</h1>
+                    The hard stuff is over now. Only 2 instructions remain.<br><br>
+                    in takes in 1 character of input from the Input textbox and stores its ASCII value in the accumulator.
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/dd/ASCII-Table.svg" class="img-responsive">
+                    If there is no readily available input in the textbox, a popup will appear asking for more.
+                    <pre class="code"><code>in
+cmp #"\n"
+out
+jnz 0
+hlt</code></pre>
+                    This a program that prints out the first line of input it receives. Try typing some stuff in the Input textbox before running this program and it'll print it out immediately. You'll notice that your input will disappear character by character from the textbox as the program processes it. After that, reset it and try running it without any input. Type some stuff into the popup alert and it'll output that too. out, as you can guess, does the opposite of in. It takes the value of the accumulator and prints it as a character. You can use a loop with an indirect load to print out an entire string like in the Hello world example program. Looking at it, you should hopefully be able to understand it in its entirety by now.
+                    <h1>Miscellaneous assembler tips</h1>
+                    I did not create the assembler for this computer. It is based on the program <a href="https://github.com/hlorenzi/customasm">customasm</a>, which allows you to create custom assemblers for any given instruction set. The <a href="https://github.com/hlorenzi/customasm/wiki/">customasm wiki</a> has more detailed info, but here are some general assembler tips that haven't been covered:
+                    <pre class="code"><code>#addr 0x10
+ld #5
+hlt</code></pre>
+                    #addr changes the address at which code will be compiled. Normally, assembled machine code instructions will be placed sequentially in memory, but this allows you to place code at specific memory addresses.
+                    <pre class="code"><code>ld #5
+#res 0x8
+hlt</code></pre>
+                    #res reserves a certain amount of memory after the previous instruction. This can be useful if you want to make a label where you can store multi-byte data, like strings of text. Just make sure your code does not fall vulnerable to arbitrary code execution (keep a variable storing the amount of characters inputted, and stop processing characters after some threshold is reached).
+                    <pre class="code"><code>add:
+#d8 3 + 5 ; 8
+
+bitwise_or:
+#d8 45 | 64 ; 109
+
+shift:
+#d8 23 << 2 ; 92</code></pre>
+                    In data declarations, you can use mathematical operations to define values. You can also use bitwise operations and shifts.
+                    <h1>Conclusion</h1>
+                    This is the end of the tutorial. Hopefully you found this a helpful guide in teaching you assembly language. From here on out, you should have enough knowledge to be able to answer any questions you have on your own. If you are confused about something, try writing a program to test its effects and see if you can figure it out.
+                </div>
+            </div>
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>

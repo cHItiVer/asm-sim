@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+        <link rel="shortcut icon" href="/favicon.png">
+        <title>Assembly Simulator</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="columns">
+                <div class="column col-4 col-ml-auto">
+                    <h1>Memory</h1>
+                    <table id="memory" class="table" style="table-layout: fixed;">
+                        <tr>
+                            <th></th>
+                            <th>_0</th>
+                            <th>_1</th>
+                            <th>_2</th>
+                            <th>_3</th>
+                            <th>_4</th>
+                            <th>_5</th>
+                            <th>_6</th>
+                            <th>_7</th>
+                            <th>_8</th>
+                            <th>_9</th>
+                            <th>_A</th>
+                            <th>_B</th>
+                            <th>_C</th>
+                            <th>_D</th>
+                            <th>_E</th>
+                            <th>_F</th>            
+                        </tr>
+                        <tr>
+                            <th>0_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>1_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>2_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>3_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>4_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>5_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>6_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>7_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>8_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>9_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>A_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>B_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>C_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>D_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>E_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <th>F_</th>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                            <td>00</td>
+                        </tr>
+                    </table>
+                    <span id="current_instruction"><b>Current instruction:</b> </span>
+                    <br>
+                    <h1>Labels</h1>
+                    <table class="table">
+                        <thead>
+                            <th>Label</th>
+                            <th>Address</th>
+                        </thead>
+                        <tbody id="labels">
+                            
+                        </tbody>
+                    </table>
+                    <h1>Registers</h1>
+                    <table id="registers" class="table" style="table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th>PC</th>
+                                <th>SP</th>
+                                <th>A</th>
+                                <th>C</th>
+                                <th>Z</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>00</td>
+                                <td>0</td>
+                                <td>00</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h1>Call stack</h1>
+                    <table id="stack" class="table" style="table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th>0</th>
+                                <th>1</th>
+                                <th>2</th>
+                                <th>3</th>
+                                <th>4</th>
+                                <th>5</th>
+                                <th>6</th>
+                                <th>7</th>
+                                <th>8</th>
+                                <th>9</th>
+                                <th>A</th>
+                                <th>B</th>
+                                <th>C</th>
+                                <th>D</th>
+                                <th>E</th>
+                                <th>F</th>            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="column col-4 col-mr-auto">
+                    <h1>Input</h1>
+                    <textarea class="form-input" rows="5" id="input" spellcheck="false" style="resize: none;"></textarea>
+                    <h1>Output</h1>
+                    <textarea class="form-input" readonly rows="5" id="output" spellcheck="false" style="resize: none;"></textarea>
+                    <h1>Program</h1>
+                    <textarea class="form-input" rows="20" id="program" spellcheck="false" style="resize: none;"></textarea>
+                    <h1>Example programs</h1>
+                    <button class="btn btn-primary" onclick="program.value = 'ld [string_address]\ncmp #&quot;\\n&quot;\nout\njz end\nld string_address\nadd #1\nst string_address\njmp 0\n\nend:\nhlt\n\nstring_address:\n#d8 string\n\nstring:\n#d &quot;Hello, world!\\n&quot;'">Hello world</button>
+                    <button class="btn btn-primary" onclick="program.value = 'ld number\ncmp #100\njz end\nadd #1\nst number\nld #3\nst number2\ncall modulo\njz divisible_by_3\nld #5\nst number2\ncall modulo\njz divisible_by_5\n\nprint_number:\nld number\nshr\nshr\nshr\nshr\ncmp #10\njc high_digit\nadd #55\nout\n\nlow_part:\nld number\nand #15\ncmp #10\njc low_digit\nadd #55\nout\nld #&quot;\\n&quot;\nout\njmp 0\n\nhigh_digit:\nadd #48\nout\njmp low_part\n\nlow_digit:\nadd #48\nout\nld #&quot;\\n&quot;\nout\njmp 0\n\ndivisible_by_3:\nld #5\nst number2\ncall modulo\njz divisible_by_15\nld #&quot;F&quot;\nout\nld #&quot;i&quot;\nout\nld #&quot;z&quot;\nout\nout\nld #&quot;\\n&quot;\nout\njmp 0\n\ndivisible_by_15:\nld #&quot;F&quot;\nout\nld #&quot;i&quot;\nout\nld #&quot;z&quot;\nout\nout\n\ndivisible_by_5:\nld #&quot;B&quot;\nout\nld #&quot;u&quot;\nout\nld #&quot;z&quot;\nout\nout\nld #&quot;\\n&quot;\nout\njmp 0\n\nmodulo:\nld number\n\nloop:\nsub number2\njnc loop\nadd number2\nret\n\nnumber:\n#d8 0\n\nnumber2:\n#d8 0\n\nend:\nhlt'">FizzBuzz</button>
+                    <button class="btn btn-primary" onclick="program.value = '; Try typing in this as your name: 12345678901234567890123456HccccccCccg\n\njmp start\n\nprint:\nld [.address]\ncmp #0\njz .end\nout\nld .address\nadd #1\nst .address\njmp print\n\n.end:\nret\n\n.address:\n#d8 0\n\ninput:\nin\ncmp #&quot;\\n&quot;\njz .end\nst [.address]\nld .address\nadd #1\nst .address\njmp input\n\n.end:\nret\n\n.address:\n#d8 0\n\nwhats_your_name:\n#d &quot;What is your name? &quot;\n#d8 0\n\nhello:\n#d &quot;Hello, &quot;\n\nname:\n#res 8\n\nstart:\nld #whats_your_name\nst print.address\ncall print\nld #name\nst input.address\ncall input\nld #hello\nst print.address\ncall print\nld #&quot;!&quot;\nout\nld #&quot;\\n&quot;\nout\nhlt'">Arbitrary code execution</button>
+                    <button class="btn btn-primary" onclick="program.value = 'ld #2\ncall push\nld #4\ncall push\ncall ackermann\nld stack\nshr\nshr\nshr\nshr\ncmp #10\njc high_digit\nadd #55\nout\n\nlow_part:\nld stack\nand #15\ncmp #10\njc low_digit\nadd #55\nout\nld #&quot;\\n&quot;\nout\nhlt\n\nhigh_digit:\nadd #48\nout\njmp low_part\n\nlow_digit:\nadd #48\nout\nld #&quot;\\n&quot;\nout\nhlt\n\nackermann:\ncall pop\nst .y\ncall pop\nst .x\ncmp #0\njz .x_0\nld .y\ncmp #0\njz .y_0\nld .x\nsub #1\ncall push\nld .x\ncall push\nld .y\nsub #1\ncall push\ncall ackermann\ncall ackermann\nret\n\n.x_0:\nld .y\nadd #1\ncall push\nret\n\n.y_0:\nld .x\nsub #1\ncall push\nld #1\ncall push\ncall ackermann\nret\n\n.x:\n#d8 0\n\n.y:\n#d8 0\n\npush:\nst [sp]\nld sp\nadd #1\nst sp\nret\n\npop:\nld sp\nsub #1\nst sp\nld [sp]\nret\n\nsp:\n#d8 stack\n\nstack:'">Ackermann</button>
+                    <h1>Control</h1>
+                    <button onclick="run()" class="btn btn-primary">Run</button>
+                    <button onclick="running = 0" class="btn btn-primary">Stop</button>
+                    <button onclick="step()" class="btn btn-primary">Step</button>
+                    <button onclick="reset()" class="btn btn-primary">Reset</button>
+                    <button onclick="assemble(); running = 0" class="btn btn-primary">Assemble</button>
+                    <a class="btn btn-primary" href="#tutorial" onclick="document.getElementById('tutorial').setAttribute('class', 'modal active')">Tutorial</a>
+                    <div class="modal" id="tutorial">
+                        <a href="#close" class="modal-overlay" aria-label="Close"></a>
+                        <div class="modal-container">
+                            <div class="modal-header">
+                                <a href="#close" class="btn btn-clear float-right" aria-label="Close" onclick="document.getElementById('tutorial').setAttribute('class', 'modal')"></a>
+                                <div class="modal-title h2">Tutorial</div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="content">
+                                    Write your code in the Program textbox and then click the Assemble button in the Control section. If there is an error with the code, it will be displayed in the Output textbox. After fixing the error, you can try to assemble it again, and if there are no errors, the program will be loaded into memory. Alternatively, you can use the buttons in the Example programs section to load in some already written programs. For a full tutorial of how to program this computer, click <a href="/tutorial.html" target="_blank">here</a>.<br><br>Pressing the Run button will run the program, and pressing the Stop button will stop it. You can press Run again to continue execution. You can change the speed at which the program runs with the slider. When the program is stopped, the Step button can be used to run the program 1 instruction at a time, which lets you see all of the effects each instruction has before moving onto the next one.<br><br>The Memory section displays the contents of all 256 bytes of the computer's memory. It is automatically updated whenever a change is made. When running a program, the memory location highlighted in blue is the location of the instruction being currently executed. The current instruction's mnemonic is displayed below the table. The memory location highlighted in gray is the location of the data being accessed by each instruction, which may change depending on the instruction's addressing mode.<br><br>Below the Memory section is the Registers section, which contains the contents of the computer's 5 registers: from left to right, the program counter, stack pointer, accumulator, and carry and zero flags. Below that is the call stack, which keeps track of function return addresses. The cell highlighted in blue is the current location of the stack pointer.<br><br>The Input textbox is where text input to your program can be provided. It is a buffer, so even though programs can only process text 1 character at a time, anything you type will stay there until it is processed. Backspace works, so you can edit your input before it gets processed. The Output textbox shows the program's text output, as well as any error messages that arise when assembling a program and the halt message.
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    <input class="slider" type="range" min="1" max="100" value="1" id="speed" oninput="document.getElementById('ips').innerHTML = '<b>Speed:</b> ' + document.getElementById('speed').value + ' instructions per second'; speed = Number(document.getElementById('speed').value)">
+                    <p id="ips"><b>Speed:</b> 1 instructions per second</p>
+                </div>
+            </div>
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>
