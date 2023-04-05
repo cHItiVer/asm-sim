@@ -111,14 +111,14 @@ function update()
     for(let row = 1; row < 17; row++)
     {
 		for(let column = 1; column < 17; column++)
-        {
+        	{
 			memory_view.rows[row].cells[column].innerHTML = memory[(row - 1) * 16 + column - 1].toString(16).padStart(2, "0").toUpperCase();
 			if((row - 1) * 16 + column - 1 == source_address)
-            {
+            		{
 				memory_view.rows[row].cells[column].innerHTML = "<span class='label label-secondary'>" + memory[(row - 1) * 16 + column - 1].toString(16).padStart(2, "0").toUpperCase() + "</span>";
 			}
 			if((row - 1) * 16 + column - 1 == program_counter[0])
-            {
+            		{
 				memory_view.rows[row].cells[column].innerHTML = "<span class='label label-primary'>" + memory[(row - 1) * 16 + column - 1].toString(16).padStart(2, "0").toUpperCase() + "</span>";
 			}
 		}
@@ -129,10 +129,10 @@ function update()
 	registers.rows[1].cells[3].innerHTML = (+carry_flag).toString();
 	registers.rows[1].cells[4].innerHTML = (+zero_flag).toString();
 	for(let column = 0; column < 16; column++)
-    {
+    	{
 		stack_view.rows[1].cells[column].innerHTML = stack[column].toString(16).padStart(2, "0").toUpperCase();
 		if(column == stack_pointer)
-        {
+        	{
 			stack_view.rows[1].cells[column].innerHTML = "<span class='label label-primary'>" + stack[column].toString(16).padStart(2, "0").toUpperCase() + "</span>";
 		}
 	}
@@ -140,12 +140,12 @@ function update()
 
 function step()
 {
-    running = true;
-    let source: number = 0;
-    let tmp: number = 0;
-    switch(memory[program_counter[0]] & 3)
-    {
-        case 0:
+	running = true;
+	let source: number = 0;
+	let tmp: number = 0;
+	switch(memory[program_counter[0]] & 3)
+	{
+		case 0:
 			// immediate
 			source_address = program_counter[0] + 1;
 			break;
@@ -160,10 +160,10 @@ function step()
 		default:
 			source_address = program_counter[0];
 			break;
-    }
+	}
 	source = memory[source_address];
-    switch(memory[program_counter[0]++] >> 2)
-    {
+	switch(memory[program_counter[0]++] >> 2)
+	{
 		case 1:
 			// load
 			accumulator[0] = source;
@@ -311,7 +311,7 @@ function step()
 		case 0x17:
 			// input
 			while(!input.value.length || input.value == "null\n")
-            {
+	    		{
 				input.value = prompt("Please provide input:", "") + "\n";
 			}
 			accumulator[0] = input.value.charCodeAt(0);
@@ -328,36 +328,36 @@ function step()
 			running = false;
 			break;
 	}
-    if(running)
-    {
-        update();
-    }
+	if(running)
+	{
+		update();
+	}
 }
 
 async function run()
 {
-    running = true;
-    while(running)
-    {
-        step();
-        await sleep(1000 / speed);
-    }
+	running = true;
+	while(running)
+	{
+		step();
+		await sleep(1000 / speed);
+	}
 }
 
 function reset()
 {
-    memory = new Uint8Array(256);
-    stack = new Uint8Array(16);
-    program_counter = new Uint8Array(1);
-    stack_pointer = 0;
-    accumulator = new Uint8Array(1);
-    carry_flag = false;
-    zero_flag = false;
-    running = true;
-    input.value = "";
-    output.innerHTML = "";
+	memory = new Uint8Array(256);
+	stack = new Uint8Array(16);
+	program_counter = new Uint8Array(1);
+	stack_pointer = 0;
+	accumulator = new Uint8Array(1);
+	carry_flag = false;
+	zero_flag = false;
+	running = true;
+	input.value = "";
+	output.innerHTML = "";
 	labels_view.innerHTML = "";
-    update();
+	update();
 }
 
 
